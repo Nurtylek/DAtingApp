@@ -16,11 +16,11 @@ export class NavComponent implements OnInit {
   }
 
 
-  async login() {
-   await this.authService.login(this.model).subscribe(next => {
+  login() {
+    this.authService.login(this.model).subscribe(next => {
       console.log('Logged in successfully');
     }, error => {
-      console.log('Failed to login');
+      console.log(error);
     });
   }
 

@@ -33,9 +33,6 @@ namespace DatingApp.API.Controllers
         {
             // if (!ModelState.IsValid)
             //     return BadRequest(ModelState);
-
-
-
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.Username))
@@ -54,6 +51,9 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
+            // throw new Exception("computer says no");
+ 
+
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
             if(userFromRepo == null)
                 return Unauthorized();
