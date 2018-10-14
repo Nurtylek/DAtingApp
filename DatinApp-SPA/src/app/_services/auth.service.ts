@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { KeyedWrite } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
