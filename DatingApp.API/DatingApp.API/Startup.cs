@@ -40,10 +40,13 @@ namespace DatingApp.API
 
             services.AddCors();
             services.AddAutoMapper();
-            services.AddTransient<Seed>();
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddTransient<Seed>();
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens
@@ -76,7 +79,7 @@ namespace DatingApp.API
             {
                 app.UseExceptionHandler(builder => 
                 {
-                        builder.Run(async context => {context.Response.StatusCode = 
+                    builder.Run(async context => {context.Response.StatusCode = 
                         (int)HttpStatusCode.InternalServerError;
                         var error  = context.Features.Get<IExceptionHandlerFeature>();
                         if(error != null) 
