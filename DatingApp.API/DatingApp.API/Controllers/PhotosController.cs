@@ -138,7 +138,7 @@ namespace DatingApp.API.Controllers
             var photoFromRepo = await _repo.GetPhoto(id);
 
             if (photoFromRepo.IsMain)
-                return BadRequest("You can't deleteyour main photo!!!");
+                return BadRequest("You can't delete your main photo!!!");
 
             if (photoFromRepo.PublicID != null) 
             {
@@ -159,7 +159,6 @@ namespace DatingApp.API.Controllers
                     return Ok();
 
             return BadRequest("Failed to delete the photo");
-            
         }
     }
 }

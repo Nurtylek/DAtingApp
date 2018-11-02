@@ -17,12 +17,10 @@ namespace DatingApp.API.Data
             var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
             var users = JsonConvert.DeserializeObject<List<User>>(userData);
 
-
             foreach (var user in users)
             {
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash("password", out passwordHash, out passwordSalt);
-
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
@@ -30,7 +28,6 @@ namespace DatingApp.API.Data
 
                 _context.Add(user);
             }
-
             _context.SaveChanges();
         }
 

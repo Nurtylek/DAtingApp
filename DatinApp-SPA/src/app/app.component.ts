@@ -9,9 +9,7 @@ import { User } from './_models/user';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'DatinApp-SPA';
   jwtHelper = new JwtHelperService();
-
 
   constructor(private authService: AuthService) {}
 
