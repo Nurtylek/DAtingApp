@@ -20,7 +20,9 @@ export class RegisterComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(private authService: AuthService,
-    private alertify: AlertifyService, private fb: FormBuilder, private router: Router) { }
+              private alertify: AlertifyService,
+              private fb: FormBuilder,
+              private router: Router) { }
 
   ngOnInit() {
     this.bsConfig = {
@@ -57,7 +59,7 @@ export class RegisterComponent implements OnInit {
 
 
   register() {
-    // console.log(this.registerForm.value);
+    console.log(this.registerForm.value);
     if (this.registerForm.valid) {
       this.user = Object.assign({}, this.registerForm.value);  // clones into user assign method
       this.authService.register(this.user).subscribe(() => {

@@ -12,7 +12,6 @@
   <div class="form-group text-center">
     <button class="btn btn-success mr-2" type="submit">Register</button>
     <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
-
   </div>
 </form> -->
 
@@ -41,8 +40,7 @@
 
     <div class="form-group">
       <input [ngClass]="{'is-invalid': registerForm.get('knownAs').errors 
-        && registerForm.get('knownAs').touched}" 
-      class="form-control"
+        && registerForm.get('knownAs').touched}" class="form-control"
         placeholder="Known as" formControlName="knownAs">
       <div class="invalid-feedback" *ngIf="registerForm.get('knownAs').touched 
         && registerForm.get('knownAs').hasError('required')">Known as is required</div>
@@ -73,9 +71,9 @@
     </div>
     
     <div class="form-group">
-      <input type="password" 
-      [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}" 
-      class="form-control" formControlName="password" placeholder="password">
+      <input type="password" [ngClass]="{'is-invalid': registerForm.get('password').errors 
+        && registerForm.get('password').touched}" 
+        class="form-control" formControlName="password" placeholder="password">
       <div class="invalid-feedback" *ngIf="registerForm.get('password').hasError('required') 
         && registerForm.get('password').touched">Password is required
       </div>
@@ -88,8 +86,7 @@
     </div>
 
     <div class="form-group">
-      <input type="password" 
-      [ngClass]="{'is-invalid': registerForm.get('confirmPassword').errors 
+      <input type="password" [ngClass]="{'is-invalid': registerForm.get('confirmPassword').errors 
         && registerForm.get('confirmPassword').touched 
         || registerForm.get('confirmPassword').touched 
         && registerForm.hasError('mismatch') }"
@@ -107,7 +104,6 @@
     <div class="form-group text-center">
       <button class="btn btn-success mr-2" [disabled]="!registerForm.valid" type="submit">Register</button>
       <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
-  
     </div>
 </form>
 

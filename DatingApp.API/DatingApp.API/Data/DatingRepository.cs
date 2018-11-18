@@ -70,8 +70,6 @@ namespace DatingApp.API.Data
                 users = users.Where(u => userLikees.Contains(u.Id));
             }
 
-
-
             if (userParams.MinAge != 18 || userParams.MaxAge != 99 )
             {
                 var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);

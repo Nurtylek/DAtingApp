@@ -15,12 +15,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace DatingApp.API
 {
@@ -30,14 +30,18 @@ namespace DatingApp.API
         {
             Configuration = configuration;
         }
+        // "ConnectionStrings": {
+//     "DefaultConnection":"Server=.\\SQLExpress;Database=DatingAppDb;Trusted_Connection=True;"
+//   }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x =>
-            x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(opt => opt
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
 
             services.AddCors();
             services.AddAutoMapper();
@@ -69,10 +73,43 @@ namespace DatingApp.API
                 opt.SerializerSettings.ReferenceLoopHandling = 
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            // services.AddSwaggerGen(c =>
-            // {
-            //     c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-            // });
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(opt => opt
+                    .UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddCors();
+            services.AddAutoMapper();
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddTransient<Seed>();
+
+            services.AddScoped<LogUserActivity>();
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens
+                    .TokenValidationParameters 
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            .AddJsonOptions(opt => {
+                opt.SerializerSettings.ReferenceLoopHandling = 
+                Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,19 +137,25 @@ namespace DatingApp.API
             }
 
             // seeder.SeedUsers();
-            
-            // app.UseSwagger();
-            // app.UseSwaggerUI(c =>
-            // {
-            //     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            // });
-
 
             // app.UseHttpsRedirection();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseAuthentication();
+            // localhost:5001
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Fallback", action = "Index" }
+                );
+            });
+
+            // app.UseMvc();
         }
     }
 }

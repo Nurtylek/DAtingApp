@@ -64,7 +64,6 @@ namespace DatingApp.API.Controllers
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
-
             return Ok(userToReturn);
         }
 
