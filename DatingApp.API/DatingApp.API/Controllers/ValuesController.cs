@@ -9,6 +9,8 @@ using DatingApp.API.Dtos;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using DatingApp.API.Models;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace DatingApp.API.Controllers
 {
@@ -43,7 +45,12 @@ namespace DatingApp.API.Controllers
                 return NotFound();
 
             var valueToReturn = _mapper.Map<ValueForReturnDto>(value);
-            return Ok(valueToReturn);
+            // return Ok(valueToReturn);
+            return new JsonResult(valueToReturn ,new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                // ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
 
         // POST api/values

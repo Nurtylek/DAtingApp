@@ -110,7 +110,6 @@ namespace DatingApp.API.Controllers
                 return Ok();
 
             return BadRequest("Failed to like user");
-            
         }
     }
 }
